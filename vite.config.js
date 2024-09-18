@@ -5,7 +5,7 @@ import SortCss from "postcss-sort-media-queries";
 import { globSync } from "glob"; // Імпортуйте `globSync` з `glob`
 
 export default defineConfig(({ command }) => ({
-  base: command === "build" ? "/goit-js-hw-11/" : "/",
+  base: command === "build" ? "/goit-js-hw-12/" : "/",
   define: {
     [command === "serve" ? "global" : "_global"]: {},
   },
