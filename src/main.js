@@ -26,14 +26,25 @@ refs.searchForm.addEventListener('submit', hendleSearch);
 
 async function hendleSearch(event) {
   event.preventDefault();
-  refs.cardBox.innerHTML = '';
-  showLoader();
+  refs.cardBox.innerHTML = "";
   const form = event.currentTarget;
-  params.q = form.elements.search.value.toLowerCase().trim();
+  params.q = form.elements.search.value.toLowerCase().trim(); // Додано trim()
+
+  if (!params.q) {
+    // Додана перевірка на пустий інпут
+    iziToast.error({
+      message: `Please enter the data in the input field`,
+      position: "topRight",
+      messageColor: "#ffffff",
+      backgroundColor: "#EF4040",
+    });
+    loadMoreBtn.hide();
+    hideLoader();
+    return; // Вихід з функції, якщо інпут пустий
+  }
 
   loadMoreBtn.show();
   loadMoreBtn.disable();
-
   params.page = 1;
 
   try {
@@ -43,7 +54,7 @@ async function hendleSearch(event) {
 
     if (params.maxPage > 1) {
       loadMoreBtn.enable();
-      refs.loadMoreBtn.addEventListener('click', handleLoadMore);
+      refs.loadMoreBtn.addEventListener("click", handleLoadMore);
     } else {
       loadMoreBtn.hide();
     }
@@ -51,9 +62,9 @@ async function hendleSearch(event) {
       loadMoreBtn.disable();
       iziToast.error({
         message: `Sorry, there are no images matching<br>your search query. Please try again!`,
-        position: 'topRight',
-        messageColor: '#ffffff',
-        backgroundColor: '#EF4040',
+        position: "topRight",
+        messageColor: "#ffffff",
+        backgroundColor: "#EF4040",
       });
       return;
     }
@@ -62,9 +73,9 @@ async function hendleSearch(event) {
       loadMoreBtn.hide();
       iziToast.error({
         message: `Please enter the data in the input field`,
-        position: 'topRight',
-        messageColor: '#ffffff',
-        backgroundColor: '#EF4040',
+        position: "topRight",
+        messageColor: "#ffffff",
+        backgroundColor: "#EF4040",
       });
       return;
     }
@@ -73,15 +84,15 @@ async function hendleSearch(event) {
   } catch (err) {
     iziToast.error({
       message: `${err.message}`,
-      position: 'topRight',
-      messageColor: '#ffffff',
-      backgroundColor: '#EF4040',
+      position: "topRight",
+      messageColor: "#ffffff",
+      backgroundColor: "#EF4040",
     });
   } finally {
     hideLoader();
     if (params.page === params.maxPage) {
       loadMoreBtn.hide();
-      refs.loadMoreBtn.removeEventListener('click', handleLoadMore);
+      refs.loadMoreBtn.removeEventListener("click", handleLoadMore);
     } else {
       loadMoreBtn.enable();
     }
@@ -97,31 +108,24 @@ async function handleLoadMore() {
     showLoader();
     const { hits } = await searchImagesPixaby(params);
     renderSearcCard(hits);
-    let elem = document.querySelector('.scrol');
-    let rect = elem.getBoundingClientRect();
 
-    window.scrollBy({
-      top: rect.height * 2,
-      left: rect.width,
-      behavior: 'smooth',
-    });
+    // Логіка для прокрутки
   } catch (err) {
     iziToast.error({
       message: `${err.message}`,
-      position: 'topRight',
-      messageColor: '#ffffff',
-      backgroundColor: '#EF4040',
+      position: "topRight",
+      messageColor: "#ffffff",
+      backgroundColor: "#EF4040",
     });
+    loadMoreBtn.hide(); // Додано: ховаємо кнопку при помилці
   } finally {
     hideLoader();
     if (params.page === params.maxPage) {
       iziToast.success({
         message: "We're sorry, but you've reached the end of search results",
-        position: 'topRight',
+        position: "topRight",
       });
-      loadMoreBtn.hide();
-
-      refs.loadMoreBtn.removeEventListener('click', handleLoadMore);
+      loadMoreBtn.hide(); // Додано: ховаємо кнопку, коли досягнута остання сторінка
     } else {
       loadMoreBtn.enable();
     }
