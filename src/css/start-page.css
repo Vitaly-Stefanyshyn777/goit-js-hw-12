@@ -122,6 +122,10 @@
   }
 }
 
+.is-hidden {
+  display: none !important;
+}
+
 .button.is-hidden {
   display: none;
 }

@@ -1,3 +1,4 @@
+// src/js/loadMoreBtn.js
 export default class ButtonService {
   constructor(buttonEL, hiddenClass) {
     this.buttonEL = buttonEL;
